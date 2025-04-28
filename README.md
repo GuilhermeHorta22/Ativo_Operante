@@ -6,7 +6,7 @@ Este sistema oferece uma plataforma onde o cidadão pode registrar denúncias de
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Java 17**
+- **Java 21**
 - **Spring Boot (API REST)**
 - **Spring Security + JWT**
 - **Spring Data JPA**
