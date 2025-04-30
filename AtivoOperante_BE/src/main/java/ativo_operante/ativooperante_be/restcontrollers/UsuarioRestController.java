@@ -64,7 +64,6 @@ public class UsuarioRestController
     @PutMapping
     public ResponseEntity<Object> updateUsuario(@RequestBody Usuario usuario)
     {
-        Usuario novoUsuario = null;
         try
         {
             Usuario usuarioAlterado = usuarioService.save(usuario);

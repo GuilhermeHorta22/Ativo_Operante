@@ -66,7 +66,6 @@ public class OrgaoRestController
     @PutMapping
     public ResponseEntity<Object> updateOrgao(@RequestBody Orgao orgao)
     {
-        Orgao novoOrgao = null;
         try
         {
             Orgao orgaoAlterado = orgaoService.update(orgao);

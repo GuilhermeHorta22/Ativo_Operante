@@ -66,7 +66,6 @@ public class TipoRestController
     @PutMapping
     public ResponseEntity<Object> updateTipo(@RequestBody Tipo tipo)
     {
-        Tipo novoTipo = null;
         try
         {
             Tipo tipoAlterado = tipoService.save(tipo);
