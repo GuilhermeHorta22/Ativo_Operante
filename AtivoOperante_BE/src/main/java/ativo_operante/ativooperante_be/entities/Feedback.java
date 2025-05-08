@@ -15,7 +15,7 @@ public class Feedback
     private String texto;
 
     @OneToOne
-    @JoinColumn(name = "den_id", nullable = false)
+    @JoinColumn(name = "den_id", unique = true)
     private Denuncia denuncia;
 
     public Feedback(Long id, String texto)

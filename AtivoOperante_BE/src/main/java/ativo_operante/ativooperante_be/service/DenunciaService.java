@@ -1,6 +1,8 @@
 package ativo_operante.ativooperante_be.service;
 
 import ativo_operante.ativooperante_be.entities.Denuncia;
+import ativo_operante.ativooperante_be.entities.Feedback;
+import ativo_operante.ativooperante_be.entities.Usuario;
 import ativo_operante.ativooperante_be.repositories.DenunciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,5 +57,19 @@ public class DenunciaService
             return true;
         }
         return false;
+    }
+
+    public boolean addFeedBack(Feedback feedBack){
+        try {
+            denunciaRepository.addFeedback(feedBack.getId(), feedBack.getTexto());
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+
+    public List<Denuncia> getAllByUsuario(Long id) {
+        return denunciaRepository.findAllByUsuario(new Usuario(id,0L,"",0,0));
     }
 }
