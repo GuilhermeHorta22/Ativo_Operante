@@ -178,3 +178,11 @@ body {
         padding: 30px 20px;
     }
 }
+
+.erro-input {
+    border-color: red !important;   
+}
+
+.erroValida{
+    color: red;
+}

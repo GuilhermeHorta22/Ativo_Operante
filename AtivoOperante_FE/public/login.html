@@ -20,11 +20,13 @@
             <form>
                 <div class="form-group">
                     <label for="email">E-mail</label>
-                    <input type="email" id="email" placeholder="Seu e-mail" required>
+                    <input type="email" id="emailLogin" placeholder="Digite seu e-mail" required>
+                    <p id="erroEmailLogin" class="erroValida"></p>
                 </div>
                 <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" placeholder="Sua senha" required>
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senhaLogin" placeholder="Digite sua senha" required>
+                    <p id="erroSenhaLogin" class="erroValida"></p>
                 </div>
                 <div class="forgot-password">
                     <a href="#">Esqueceu a senha?</a>
@@ -36,5 +38,7 @@
             </form>
         </div>
     </div>
+    <script src="../public/js/validacao.js"></script> <!--Script com as validações da pagina-->
+    <script src="../public/js/api.js"></script> <!--Script com a conexão com o backEnd-->
 </body>
 </html>

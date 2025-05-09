@@ -20,15 +20,18 @@
             <form>
                 <div class="form-group">
                     <label for="cpf">CPF</label>
-                    <input type="text" id="cpf" placeholder="000.000.000-00" required>
+                    <input maxlength="14" type="text" id="cpf" placeholder="000.000.000-00" required>
+                    <p id="erroCpf" class="erroValida"></p>
                 </div>
                 <div class="form-group">
                     <label for="email">E-mail</label>
-                    <input type="email" id="email" placeholder="Seu e-mail" required>
+                    <input type="email" id="email" placeholder="Digite seu e-mail" required>
+                    <p id="erroEmail" class="erroValida"></p>
                 </div>
                 <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" placeholder="Sua senha" required>
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" placeholder="Digite sua senha" required>
+                    <p id="erroSenha" class="erroValida"></p>
                 </div>
                 <div class="form-group">
                     <label for="access-level">Nível de Acesso</label>
@@ -47,5 +50,7 @@
             </form>
         </div>
     </div>
+    <script src="../public/js/validacao.js"></script> <!--Script com as validações da pagina-->
+    <script src="../public/js/api.js"></script> <!--Script com a conexão com o backEnd-->
 </body>
 </html>
