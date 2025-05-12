@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 @RestController //indica que essa classe é controller e vai responser as requisições
@@ -46,7 +48,11 @@ public class TipoRestController
         }
         catch(Exception e)
         {
-            return ResponseEntity.badRequest().body("Erro ao adicionar um novo tipo");
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                return ResponseEntity.badRequest().body("Erro:\n" + sw.toString());
+            //e.printStackTrace(); // Isso mostra o erro exato no console!
+           // return ResponseEntity.badRequest().body("Erro ao adicionar um novo tipo");
         }
     }
 

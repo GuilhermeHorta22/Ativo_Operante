@@ -21,9 +21,7 @@ public class Tipo
     }
     //construtor sem parametro
     public Tipo()
-    {
-        this(0L,"");
-    }
+    {}
 
     public Long getId() {
         return id;

@@ -4,17 +4,22 @@ import ativo_operante.ativooperante_be.entities.Denuncia;
 import ativo_operante.ativooperante_be.entities.Feedback;
 import ativo_operante.ativooperante_be.entities.Usuario;
 import ativo_operante.ativooperante_be.repositories.DenunciaRepository;
+
+import ativo_operante.ativooperante_be.repositories.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class DenunciaService
 {
     @Autowired
     private DenunciaRepository denunciaRepository;
+    @Autowired
+    private FeedbackRepository feedbackRepository;  // Injetando o repositório de Feedback
 
     //retorna todas as denuncias registrada no banco
     public List<Denuncia> getAll()
@@ -59,15 +64,22 @@ public class DenunciaService
         return false;
     }
 
-    public boolean addFeedBack(Feedback feedBack){
+    public boolean addFeedBack(Feedback feedback) {
         try {
-            denunciaRepository.addFeedback(feedBack.getId(), feedBack.getTexto());
-            return true;
-        }
-        catch (Exception e){
+            // Associando o feedback à denúncia
+            Denuncia denuncia = denunciaRepository.findById(feedback.getDenuncia().getId()).orElse(null);
+            if (denuncia != null) {
+                feedback.setDenuncia(denuncia);  // Associando a denúncia ao feedback
+                feedbackRepository.save(feedback);  // Salvando o feedback no repositório de Feedback
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();  // Logando erro para depuração
             return false;
         }
     }
+
 
     public List<Denuncia> getAllByUsuario(Long id) {
         return denunciaRepository.findAllByUsuario(new Usuario(id,0L,"",0,0));

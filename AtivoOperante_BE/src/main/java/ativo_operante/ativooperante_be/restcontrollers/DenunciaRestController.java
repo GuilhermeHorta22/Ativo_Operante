@@ -49,9 +49,11 @@ public class DenunciaRestController
         }
         catch(Exception e)
         {
-            return ResponseEntity.badRequest().body("Erro ao adicionar a nova denuncia");
+            e.printStackTrace(); // Para ver o erro exato no console
+            return ResponseEntity.badRequest().body("Erro ao adicionar a nova denúncia: " + e.getMessage());
         }
     }
+
 
     //deletando uma denuncia
     @DeleteMapping("/{id}")
