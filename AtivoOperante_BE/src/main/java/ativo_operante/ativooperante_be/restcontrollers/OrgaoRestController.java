@@ -73,7 +73,7 @@ public class OrgaoRestController
         }
         catch(Exception e)
         {
-            return ResponseEntity.badRequest().body("Erro ao alterar um orgao");
+            return ResponseEntity.badRequest().body("Erro ao alterar um orgao: " + e.getMessage());
         }
     }
 }

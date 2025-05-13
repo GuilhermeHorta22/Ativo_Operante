@@ -1,5 +1,6 @@
 package ativo_operante.ativooperante_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -40,7 +41,8 @@ public class Denuncia
     @JoinColumn(name = "usu_id", nullable = false)
     private Usuario usuario;
 
-    @OneToOne(mappedBy = "denuncia")
+    @OneToOne(mappedBy = "denuncia", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Feedback feedback;
 
 

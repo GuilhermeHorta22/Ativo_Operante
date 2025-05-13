@@ -34,12 +34,19 @@ public class OrgaoService
     }
 
     //altera um novo orgao
-    public Orgao update(Orgao orgao)
+    /*public Orgao update(Orgao orgao)
     {
         if(orgaoRepository.existsById(orgao.getId()))
             return orgaoRepository.save(orgao);
         return null;
+    }*/
+    public Orgao update(Orgao orgao)
+    {
+        if(!orgaoRepository.existsById(orgao.getId()))
+            throw new RuntimeException("Órgão não encontrado para atualização");
+        return orgaoRepository.save(orgao);
     }
+
 
     //deleta um orgao
     public void delete(Long id)

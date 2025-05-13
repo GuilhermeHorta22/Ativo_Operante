@@ -1,5 +1,6 @@
 package ativo_operante.ativooperante_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class Feedback
 
     @OneToOne
     @JoinColumn(name = "den_id", unique = true)
+    @JsonBackReference
     private Denuncia denuncia;
 
     public Feedback(Long id, String texto)
