@@ -93,10 +93,12 @@ body {
 
 .form-group {
     margin-bottom: 25px;
+/*     position: relative;*/
 }
 
 .form-group label {
     display: block;
+    /* position: absolute; */
     margin-bottom: 8px;
     color: var(--indigo-dye);
     font-weight: 500;
