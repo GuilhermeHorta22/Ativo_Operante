@@ -58,4 +58,8 @@ public class UsuarioService
         }
         return false;
     }
+
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
 }
