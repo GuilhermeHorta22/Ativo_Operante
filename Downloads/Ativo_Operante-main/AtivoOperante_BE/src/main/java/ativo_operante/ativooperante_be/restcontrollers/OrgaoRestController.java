@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("apis/orgaos")
 public class OrgaoRestController
 {
@@ -73,7 +73,7 @@ public class OrgaoRestController
         }
         catch(Exception e)
         {
-            return ResponseEntity.badRequest().body("Erro ao alterar um orgao: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao alterar um orgao");
         }
     }
 }
