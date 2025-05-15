@@ -84,15 +84,17 @@ public class DenunciaRestController
     }
 
     @GetMapping("add-feedback/{id}/{texto}")
-    public ResponseEntity<Object> addFeedBack(@PathVariable Long id, @PathVariable String texto) {
+    public ResponseEntity<Object> addFeedBack(@PathVariable Long id, @PathVariable String texto)
+    {
         if(denunciaService.addFeedBack(new Feedback(id,texto)))
             return ResponseEntity.noContent().build();
         else
-            return ResponseEntity.badRequest().body("Não foi possível adicionar o feebback");
+            return ResponseEntity.badRequest().body("Não foi possível adicionar o feedback");
     }
 
     @GetMapping("usuario/{id}")
-    public ResponseEntity<Object> getAllByUsuario(@PathVariable Long id){
+    public ResponseEntity<Object> getAllByUsuario(@PathVariable Long id)
+    {
         List<Denuncia> denunciaList;
         denunciaList=denunciaService.getAllByUsuario(id);
         if (!denunciaList.isEmpty())

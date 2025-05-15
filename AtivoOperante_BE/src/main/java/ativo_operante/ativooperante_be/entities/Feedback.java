@@ -20,6 +20,7 @@ public class Feedback
     @JsonBackReference
     private Denuncia denuncia;
 
+
     public Feedback(Long id, String texto)
     {
         this.id = id;
