@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Administração</title>
+    <link rel="stylesheet" href="style/main_adm.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Sistema de Denúncias <span>ADMIN</span></div>
+        <div class="user-menu">
+            <div class="user-avatar">A</div>
+            <button class="logout-btn">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Painel de Administração</h1>
+            <p>Gerencie órgãos, tipos de problemas e denúncias recebidas</p>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="openTab('tab-orgaos')">Órgãos Competentes</button>
+            <button class="tab-btn" onclick="openTab('tab-problemas')">Tipos de Problemas</button>
+            <button class="tab-btn" onclick="openTab('tab-denuncias')">Denúncias</button>
+        </div>
+
+        <!-- Tab Órgãos Competentes -->
+        <div id="tab-orgaos" class="tab-content active">
+            <div class="two-columns">
+                <div class="column">
+                    <div class="card">
+                        <h2>Cadastrar Novo Órgão</h2>
+                        <form id="form-orgao">
+                            <div class="form-row">
+                                <label for="nome-orgao" class="form-label">Nome do Órgão *</label>
+                                <input type="text" id="nome-orgao" class="form-control" placeholder="Ex: Prefeitura Municipal" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="sigla-orgao" class="form-label">Sigla</label>
+                                <input type="text" id="sigla-orgao" class="form-control" placeholder="Ex: PMSP">
+                            </div>
+                            <div class="form-row">
+                                <label for="descricao-orgao" class="form-label">Descrição</label>
+                                <textarea id="descricao-orgao" class="form-control" placeholder="Descreva brevemente o órgão e sua atuação"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label for="contato-orgao" class="form-label">Contato</label>
+                                <input type="text" id="contato-orgao" class="form-control" placeholder="E-mail ou telefone de contato">
+                            </div>
+                            <div class="form-footer">
+                                <button type="reset" class="btn btn-outline">Limpar</button>
+                                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card">
+                        <h2>Órgãos Cadastrados</h2>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Pesquisar órgãos...">
+                            <button class="btn btn-secondary">Buscar</button>
+                        </div>
+                        <div class="item-list">
+                            <div class="list-item">
+                                <div>Prefeitura Municipal</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Polícia Civil</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Corpo de Bombeiros</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Defesa Civil</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Vigilância Sanitária</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>

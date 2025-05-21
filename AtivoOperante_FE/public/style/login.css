@@ -22,7 +22,7 @@ body {
 }
 
 .container {
-    display: flex;
+    display: contents;
     width: 80%;
     max-width: 900px;
     height: 500px;
