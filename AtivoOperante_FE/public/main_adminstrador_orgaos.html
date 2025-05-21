@@ -105,4 +105,270 @@
                 </div>
             </div>
         </div>
+        <div id="tab-denuncias" class="tab-content">
+        <div class="card">
+            <h2>Gerenciamento de Denúncias</h2>
+            <div class="filter-options">
+                <select class="form-control">
+                    <option value="">Filtrar por Órgão</option>
+                    <option>Prefeitura Municipal</option>
+                    <option>Polícia Civil</option>
+                    <option>Corpo de Bombeiros</option>
+                    <option>Defesa Civil</option>
+                    <option>Vigilância Sanitária</option>
+                </select>
+                <select class="form-control">
+                    <option value="">Filtrar por Tipo</option>
+                    <option>Problemas de Infraestrutura</option>
+                    <option>Segurança Pública</option>
+                    <option>Meio Ambiente</option>
+                    <option>Saúde Pública</option>
+                    <option>Transporte Público</option>
+                </select>
+                <select class="form-control">
+                    <option value="">Filtrar por Urgência</option>
+                    <option>1 - Pouco Urgente</option>
+                    <option>2 - Baixa</option>
+                    <option>3 - Média</option>
+                    <option>4 - Alta</option>
+                    <option>5 - Muito Urgente</option>
+                </select>
+                <select class="form-control">
+                    <option value="">Filtrar por Status</option>
+                    <option>Pendente</option>
+                    <option>Em análise</option>
+                    <option>Respondida</option>
+                    <option>Concluída</option>
+                    <option>Arquivada</option>
+                </select>
+            </div>
+            <div class="search-bar">
+                <input type="text" class="form-control" placeholder="Pesquisar denúncias por título, descrição ou ID...">
+                <button class="btn btn-secondary">Buscar</button>
+            </div>
+            <div class="denuncias-grid">
+                <!-- Exemplo 1 -->
+                <div class="denuncia-card">
+                    <div class="denuncia-header">
+                        <h3>Buraco na Avenida Principal</h3>
+                        <div class="urgency-badge">4</div>
+                    </div>
+                    <div class="denuncia-body">
+                        <div class="denuncia-info">
+                            <div>ID: <span>#12345</span></div>
+                            <div>Órgão: <span>Prefeitura Municipal</span></div>
+                            <div>Tipo: <span>Infraestrutura</span></div>
+                            <div>Data: <span>15/04/2025</span></div>
+                            <div>Status: <span>Pendente</span></div>
+                        </div>
+                        <div class="denuncia-descricao">
+                            Há um buraco enorme na Avenida Principal, próximo ao número 580, que está causando acidentes e danificando veículos...
+                        </div>
+                        <div class="denuncia-actions">
+                            <button class="btn btn-outline" onclick="openDenunciaModal()">Ver Detalhes</button>
+                            <button class="btn btn-danger">Excluir</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Exemplo 2 -->
+                <div class="denuncia-card">
+                    <div class="denuncia-header">
+                        <h3>Descarte irregular de lixo</h3>
+                        <div class="urgency-badge">3</div>
+                    </div>
+                    <div class="denuncia-body">
+                        <div class="denuncia-info">
+                            <div>ID: <span>#12346</span></div>
+                            <div>Órgão: <span>Vigilância Sanitária</span></div>
+                            <div>Tipo: <span>Meio Ambiente</span></div>
+                            <div>Data: <span>20/04/2025</span></div>
+                            <div>Status: <span>Em análise</span></div>
+                        </div>
+                        <div class="denuncia-descricao">
+                            Há um descarte irregular de lixo acontecendo no terreno baldio da Rua das Flores, número 123. O lixo está atraindo roedores e insetos...
+                        </div>
+                        <div class="denuncia-actions">
+                            <button class="btn btn-outline" onclick="openDenunciaModal()">Ver Detalhes</button>
+                            <button class="btn btn-danger">Excluir</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Exemplo 3 -->
+                <div class="denuncia-card">
+                    <div class="denuncia-header">
+                        <h3>Falta de iluminação pública</h3>
+                        <div class="urgency-badge">2</div>
+                    </div>
+                    <div class="denuncia-body">
+                        <div class="denuncia-info">
+                            <div>ID: <span>#12347</span></div>
+                            <div>Órgão: <span>Prefeitura Municipal</span></div>
+                            <div>Tipo: <span>Infraestrutura</span></div>
+                            <div>Data: <span>25/04/2025</span></div>
+                            <div>Status: <span>Pendente</span></div>
+                        </div>
+                        <div class="denuncia-descricao">
+                            A iluminação pública da Rua das Palmeiras está sem funcionar há mais de duas semanas, tornando a área perigosa à noite...
+                        </div>
+                        <div class="denuncia-actions">
+                            <button class="btn btn-outline" onclick="openDenunciaModal()">Ver Detalhes</button>
+                            <button class="btn btn-danger">Excluir</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Exemplo 4 -->
+                <div class="denuncia-card">
+                    <div class="denuncia-header">
+                        <h3>Perturbação do sossego</h3>
+                        <div class="urgency-badge">5</div>
+                    </div>
+                    <div class="denuncia-body">
+                        <div class="denuncia-info">
+                            <div>ID: <span>#12348</span></div>
+                            <div>Órgão: <span>Polícia Civil</span></div>
+                            <div>Tipo: <span>Segurança Pública</span></div>
+                            <div>Data: <span>28/04/2025</span></div>
+                            <div>Status: <span>Respondida</span></div>
+                        </div>
+                        <div class="denuncia-descricao">
+                            Bar na Rua dos Ipês está com som extremamente alto todos os dias até a madrugada, impedindo moradores de dormir...
+                        </div>
+                        <div class="denuncia-actions">
+                            <button class="btn btn-outline" onclick="openDenunciaModal()">Ver Detalhes</button>
+                            <button class="btn btn-danger">Excluir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de Detalhes da Denúncia -->
+        <div id="denunciaModal" class="detail-modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeDenunciaModal()">&times;</span>
+                <h2>Detalhes da Denúncia</h2>
+                <div class="denuncia-info" style="margin: 20px 0;">
+                    <div>ID: <span>#12345</span></div>
+                    <div>Data de Criação: <span>15/04/2025 às 14:23</span></div>
+                    <div>Status: <span>Pendente</span></div>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Título</label>
+                    <p>Buraco na Avenida Principal</p>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Descrição Completa</label>
+                    <div style="border: 1px solid var(--platinum); padding: 15px; border-radius: 6px; background-color: var(--light-gray);">
+                        <p>Há um buraco enorme na Avenida Principal, próximo ao número 580, que está causando acidentes e danificando veículos. O buraco tem aproximadamente 1 metro de diâmetro e 30 cm de profundidade. Já presenciei dois acidentes no local esta semana. É necessária uma intervenção urgente para evitar acidentes mais graves.</p>
+                    </div>
+                </div>
+                <div class="two-columns" style="margin: 20px 0;">
+                    <div class="form-row">
+                        <label class="form-label">Órgão Responsável</label>
+                        <p>Prefeitura Municipal</p>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">Tipo de Problema</label>
+                        <p>Infraestrutura</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Tab Tipos de Problemas -->
+        <div id="tab-problemas" class="tab-content active">
+            <div class="two-columns">
+                <div class="column">
+                    <div class="card">
+                        <h2>Cadastrar Novo Tipo de Problema</h2>
+                        <form id="form-problema">
+                            <div class="form-row">
+                                <label for="nome-problema" class="form-label">Nome do Problema *</label>
+                                <input type="text" id="nome-problema" class="form-control" placeholder="Ex: Problemas de Infraestrutura" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="categoria-problema" class="form-label">Categoria</label>
+                                <input type="text" id="categoria-problema" class="form-control" placeholder="Ex: Urbano, Ambiental, etc.">
+                            </div>
+                            <div class="form-row">
+                                <label for="descricao-problema" class="form-label">Descrição</label>
+                                <textarea id="descricao-problema" class="form-control" placeholder="Descreva brevemente o tipo de problema"></textarea>
+                            </div>
+                            <div class="form-footer">
+                                <button type="reset" class="btn btn-outline">Limpar</button>
+                                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card">
+                        <h2>Tipos de Problemas Cadastrados</h2>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Pesquisar tipos de problemas...">
+                            <button class="btn btn-secondary">Buscar</button>
+                        </div>
+                        <div class="item-list">
+                            <div class="list-item">
+                                <div>Problemas de Infraestrutura</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Segurança Pública</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Meio Ambiente</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Saúde Pública</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div>Transporte Público</div>
+                                <div class="item-actions">
+                                    <button class="edit" title="Editar">✏️</button>
+                                    <button class="delete" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- //container// -->
+    <script>
+            function openTab(tabId) {
+                // Esconde todas as abas
+                const allTabs = document.querySelectorAll('.tab-content');
+                allTabs.forEach(tab => tab.style.display = 'none');
+
+                // Remove a classe 'active' de todos os botões
+                const allButtons = document.querySelectorAll('.tab-btn');
+                allButtons.forEach(btn => btn.classList.remove('active'));
+
+                // Mostra a aba correspondente
+                const selectedTab = document.getElementById(tabId);
+                if (selectedTab) {
+                    selectedTab.style.display = 'block';
+                }
+
+                // Adiciona a classe 'active' ao botão clicado
+                const clickedButton = Array.from(allButtons).find(btn => btn.getAttribute('onclick').includes(tabId));
+                if (clickedButton) {
+                    clickedButton.classList.add('active');
+                }
+            }
+    </script>
 </body>

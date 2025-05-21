@@ -101,7 +101,8 @@ public class UsuarioRestController
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest request)
+    {
         // Busca o usuário pelo email
         List<Usuario> usuarios = usuarioService.getAll();
         Usuario usuarioEncontrado = usuarios.stream()
