@@ -1,32 +1,23 @@
-package ativo_operante.ativooperante_be.restcontrollers;
+package ativo_operante.ativooperante_be.restcontrollers.cidadao;
 
 import ativo_operante.ativooperante_be.entities.Denuncia;
 import ativo_operante.ativooperante_be.entities.Erro;
 import ativo_operante.ativooperante_be.entities.Feedback;
 import ativo_operante.ativooperante_be.service.DenunciaService;
+import ativo_operante.ativooperante_be.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("apis/denuncia")
-public class DenunciaRestController
+@RequestMapping("apis/cidadao/denuncia")
+public class DenunciaCidadaoController
 {
     @Autowired
     DenunciaService denunciaService;
-
-    //listando todas as denuncias para retornar
-    @GetMapping
-    public ResponseEntity<Object> getAll()
-    {
-        List<Denuncia> denunciaList;
-        denunciaList = denunciaService.getAll(); //colocando todas as denuncias dentro da lista
-        if(!denunciaList.isEmpty())
-            return ResponseEntity.ok(denunciaList);
-        return ResponseEntity.badRequest().body(new Erro("Erro ao listar as denuncias"));
-    }
 
     //buscando um id
     @GetMapping("/{id}")
@@ -55,44 +46,45 @@ public class DenunciaRestController
     }
 
 
-    //deletando uma denuncia
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delDenuncia(@PathVariable Long id)
-    {
-        Denuncia denuncia = denunciaService.getById(id).orElse(null);
-        if(denuncia != null)
-        {
-            denunciaService.delete(id);
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> delDenuncia(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        Long userId = JwtUtil.getIdFromToken(token.replace("Bearer ", ""));
+
+        Optional<Denuncia> denunciaOpt = denunciaService.getById(id);
+        if (denunciaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Denúncia não encontrada");
         }
-        return ResponseEntity.badRequest().body("Erro ao deletar uma denuncia");
+
+        Denuncia denuncia = denunciaOpt.get();
+        if (!denuncia.getUsuario().getId().equals(userId)) {
+            return ResponseEntity.status(403).body("Você não tem permissão para excluir essa denúncia");
+        }
+
+        denunciaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-    //alterando uma denuncia já existente
     @PutMapping
-    public ResponseEntity<Object> updateDenuncia(@RequestBody Denuncia denuncia)
-    {
-        try
-        {
+    public ResponseEntity<Object> updateDenuncia(@RequestBody Denuncia denuncia, @RequestHeader("Authorization") String token) {
+        Long userId = JwtUtil.getIdFromToken(token.replace("Bearer ", ""));
+
+        Optional<Denuncia> denunciaOpt = denunciaService.getById(denuncia.getId());
+        if (denunciaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Denúncia não encontrada");
+        }
+
+        if (!denunciaOpt.get().getUsuario().getId().equals(userId)) {
+            return ResponseEntity.status(403).body("Você não tem permissão para alterar essa denúncia");
+        }
+
+        try {
             Denuncia denunciaAlterada = denunciaService.update(denuncia);
             return ResponseEntity.ok(denunciaAlterada);
-        }
-        catch(Exception e)
-        {
-            return ResponseEntity.badRequest().body("Erro ao alterar a denuncia");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao alterar a denúncia");
         }
     }
 
-    @GetMapping("add-feedback/{id}/{texto}")
-    public ResponseEntity<Object> addFeedBack(@PathVariable Long id, @PathVariable String texto)
-    {
-        if(denunciaService.addFeedBack(new Feedback(id,texto)))
-
-            return ResponseEntity.noContent().build();
-        else
-            return ResponseEntity.badRequest().body("Não foi possível adicionar o feedback");
-        
-    }
 
     @GetMapping("usuario/{id}")
     public ResponseEntity<Object> getAllByUsuario(@PathVariable Long id)

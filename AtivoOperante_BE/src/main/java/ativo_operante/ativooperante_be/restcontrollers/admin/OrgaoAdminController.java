@@ -1,18 +1,17 @@
-package ativo_operante.ativooperante_be.restcontrollers;
+package ativo_operante.ativooperante_be.restcontrollers.admin;
 
 import ativo_operante.ativooperante_be.entities.Erro;
 import ativo_operante.ativooperante_be.entities.Orgao;
 import ativo_operante.ativooperante_be.service.OrgaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("apis/orgaos")
-public class OrgaoRestController
+@RequestMapping("apis/admin/orgaos")
+public class OrgaoAdminController
 {
     @Autowired
     OrgaoService orgaoService;

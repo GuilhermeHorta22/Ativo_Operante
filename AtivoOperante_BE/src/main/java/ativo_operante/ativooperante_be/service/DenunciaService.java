@@ -74,7 +74,6 @@ public class DenunciaService
         }
     }
 
-
     public List<Denuncia> getAllByUsuario(Long id) {
         return denunciaRepository.findAllByUsuario(new Usuario(id,0L,"",0,0));
     }

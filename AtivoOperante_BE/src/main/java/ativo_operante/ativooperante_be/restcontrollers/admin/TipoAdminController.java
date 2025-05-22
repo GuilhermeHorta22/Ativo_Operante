@@ -1,4 +1,4 @@
-package ativo_operante.ativooperante_be.restcontrollers;
+package ativo_operante.ativooperante_be.restcontrollers.admin;
 
 import ativo_operante.ativooperante_be.entities.Erro;
 import ativo_operante.ativooperante_be.entities.Tipo;
@@ -12,8 +12,8 @@ import java.io.StringWriter;
 import java.util.List;
 
 @RestController //indica que essa classe é controller e vai responser as requisições
-@RequestMapping("apis/tipo") //indica o caminho base para os endPoints da classe
-public class TipoRestController
+@RequestMapping("apis/admin/tipo") //indica o caminho base para os endPoints da classe
+public class TipoAdminController
 {
     @Autowired
     TipoService tipoService;

@@ -6,6 +6,8 @@ import io.jsonwebtoken.Claims;
 
 import java.util.Date;
 
+import static ativo_operante.ativooperante_be.util.JWTTokenProvider.getAllClaimsFromToken;
+
 public class JwtUtil {
     private static final String SECRET_KEY = "segredo_super_secreto"; // Chave secreta (pode ser configurada em propriedades ou env)
     private static final long EXPIRATION_TIME = 86400000; // 1 dia em milissegundos
@@ -43,4 +45,10 @@ public class JwtUtil {
     public static boolean validateToken(String token, String email) {
         return (email.equals(extractEmail(token)) && !isTokenExpired(token));
     }
+
+    public static Long getIdFromToken(String token) {
+        Claims claims = getAllClaimsFromToken(token);
+        return Long.parseLong(claims.get("id").toString());
+    }
+
 }
