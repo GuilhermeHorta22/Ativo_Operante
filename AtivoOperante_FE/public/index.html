@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ativo Operante</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            azul: { escuro: '#0A2342' },
+            bege: '#F5E9DA',
+            vermelho: '#D7263D',
+            preto: '#181818',
+            branco: '#FFFFFF'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-azul-escuro min-h-screen flex items-center justify-center px-4 py-8">
+
+<div class="w-full max-w-md p-8 rounded-2xl bg-bege border border-preto/20 shadow-xl transition-all duration-500 ease-in-out">
+  <h2 class="text-3xl font-bold text-preto mb-6 text-center">
+    Ativo <span class="text-vermelho">Operante</span>
+  </h2>
+
+  <!-- Login Form -->
+  <form id="loginForm" class="space-y-4">
+    <input type="email" id="email" name="email" placeholder="Email" required
+           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
+    <input type="number" id="senha" name="senha" placeholder="Senha (apenas números)" required
+           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
+    <button type="submit"
+            class="w-full py-2 px-4 rounded-xl text-branco font-semibold bg-azul-escuro hover:bg-preto transition">
+      Entrar
+    </button>
+  </form>
+
+  <p class="mt-6 text-sm text-preto text-center">
+    Não tem login?
+    <button id="showCadastro" class="text-vermelho hover:underline focus:outline-none transition">
+      Cadastre-se aqui
+    </button>
+  </p>
+
+  <!-- Cadastro Form (inicialmente oculto) -->
+  <form id="cadastroForm" class="space-y-4 mt-8 hidden">
+    <input type="email" id="cadastroEmail" placeholder="Email" required
+           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
+    <input type="number" id="cadastroSenha" placeholder="Senha (apenas números)" required
+           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
+    <button type="submit"
+            class="w-full py-2 px-4 rounded-xl text-branco font-semibold bg-vermelho hover:bg-azul-escuro transition">
+      Criar Conta
+    </button>
+    <p class="text-sm text-preto text-center">
+      Já tem conta?
+      <button id="voltarLogin" class="text-vermelho hover:underline focus:outline-none transition">
+        Voltar ao login
+      </button>
+    </p>
+  </form>
+</div>
+</body>
+</html>
+<script>
+  const loginForm = document.getElementById("loginForm");
+  const cadastroForm = document.getElementById("cadastroForm");
+  const showCadastro = document.getElementById("showCadastro");
+  const voltarLogin = document.getElementById("voltarLogin");
+
+  // Verificar se já está logado
+  window.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const nivel = localStorage.getItem('nivel');
+
+    if (token && nivel) {
+      // Redirecionar baseado no nível
+      if (nivel === '1') {
+        window.location.href = 'adm.html';
+      } else if (nivel === '2') {
+        window.location.href = 'home.html';
+      }
+    }
+  });
+
+  showCadastro.addEventListener("click", () => {
+    loginForm.classList.add("hidden");
+    cadastroForm.classList.remove("hidden");
+  });
+
+  voltarLogin.addEventListener("click", () => {
+    cadastroForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+  });
+
+  // Login
+  loginForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const senha = parseInt(document.getElementById("senha").value);
+
+    if (isNaN(senha)) {
+      alert("A senha deve ser um número válido");
+      return;
+    }
+
+    const data = {
+      email: email,
+      senha: senha
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/public/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.mensagem || "Falha na autenticação");
+      }
+
+      const responseData = await response.json();
+
+      // Armazenar token e nível
+      localStorage.setItem("token", responseData.token);
+      localStorage.setItem("nivel", responseData.nivel.toString());
+
+      // Redirecionar baseado no nível
+      if (responseData.nivel === 1) {
+        window.location.href = "adm.html";
+      } else if (responseData.nivel === 2) {
+        window.location.href = "home.html";
+      } else {
+        alert("Nível de usuário inválido");
+      }
+
+    } catch (err) {
+      console.error("Erro no login:", err);
+      alert("Erro ao fazer login: " + err.message);
+    }
+  });
+
+  // Cadastro
+  cadastroForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById("cadastroEmail").value;
+    const senha = parseInt(document.getElementById("cadastroSenha").value);
+
+    if (isNaN(senha)) {
+      alert("A senha deve ser um número válido");
+      return;
+    }
+
+    const data = {
+      email: email,
+      senha: senha
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/public/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      const message = await response.text();
+      alert("Usuário cadastrado com sucesso!");
+
+      // Voltar para o login
+      cadastroForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+
+      // Limpar campos
+      document.getElementById("cadastroEmail").value = "";
+      document.getElementById("cadastroSenha").value = "";
+
+    } catch (err) {
+      console.error("Erro no cadastro:", err);
+      alert("Erro ao cadastrar: " + err.message);
+    }
+  });
+</script>
+</body>
+</html>

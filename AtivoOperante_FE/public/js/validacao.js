@@ -70,6 +70,7 @@ function aplicarValidacaoCPF(idInput, idErro)
 //chamando função de validação do cpf
 document.addEventListener('DOMContentLoaded', () => {
     aplicarValidacaoCPF('cpf', 'erroCpf'); //na tela de cadastro
+    aplicarValidacaoCPF('cpfLogin', 'erroCpfLogin'); //na tela de login
 });
 
 //função que valida o e-mail

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Ativo Operante</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            azul: { escuro: '#0A2342' },
+            vermelho: '#D7263D',
+            preto: '#181818',
+            branco: '#FFFFFF'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-branco min-h-screen p-4 text-preto">
+
+<!-- MENU -->
+<div class="flex flex-col md:flex-row w-full justify-between mb-6">
+  <h1 class="text-3xl text-azul-escuro font-bold text-center mb-6">
+    Painel do <span class="text-vermelho">Administrador</span>
+  </h1>
+
+  <div class="flex items-center gap-4">
+    <!-- Tabs -->
+    <div class="flex justify-center space-x-2 flex-wrap">
+      <button class="tab-btn bg-vermelho text-branco border border-azul-escuro/20 font-bold px-4 py-2 rounded-xl" data-tab="denuncias">Denúncias</button>
+      <button class="tab-btn border border-azul-escuro/20 font-bold px-4 py-2 rounded-xl" data-tab="orgaos">Órgãos</button>
+      <button class="tab-btn border border-azul-escuro/20 font-bold px-4 py-2 rounded-xl" data-tab="problemas">Tipos de Problemas</button>
+    </div>
+
+    <!-- Logout -->
+    <button id="logoutBtn" class="bg-vermelho hover:bg-azul-escuro text-branco px-4 py-2 rounded-xl transition">
+      Sair
+    </button>
+  </div>
+</div>
+
+<div class="max-w-6xl mx-auto">
+
+  <!-- Denúncias -->
+  <div id="denuncias" class="tab-content space-y-4">
+    <h2 class="text-xl font-semibold text-azul-escuro">Responder Denúncias</h2>
+    <div id="listaDenuncias" class="space-y-4"></div>
+  </div>
+
+  <!-- Órgãos -->
+  <div id="orgaos" class="tab-content hidden space-y-4">
+    <h2 class="text-xl font-semibold text-azul-escuro">Gerenciar Órgãos</h2>
+    <form class="flex gap-2">
+      <input type="text" placeholder="Novo órgão..." class="flex-1 px-4 py-2 rounded-xl bg-white text-preto border border-azul-escuro/30 focus:outline-none focus:ring-2 focus:ring-vermelho" />
+      <button type="submit" class="bg-azul-escuro text-branco font-bold px-4 py-2 rounded-xl">Adicionar</button>
+    </form>
+    <ul class="space-y-2"></ul>
+  </div>
+
+  <!-- Tipos de Problemas -->
+  <div id="problemas" class="tab-content hidden space-y-4">
+    <h2 class="text-xl font-semibold text-azul-escuro">Gerenciar Tipos de Problemas</h2>
+    <form class="flex gap-2">
+      <input type="text" placeholder="Novo tipo..." class="flex-1 px-4 py-2 rounded-xl bg-white text-preto border border-azul-escuro/30 focus:outline-none focus:ring-2 focus:ring-vermelho" />
+      <button type="submit" class="bg-azul-escuro text-branco font-bold px-4 py-2 rounded-xl">Adicionar</button>
+    </form>
+    <ul class="space-y-2"></ul>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+  <div class="bg-branco text-preto p-6 rounded-xl max-w-md w-full space-y-4 border border-azul-escuro/20">
+    <h3 class="text-xl font-bold">Responder Denúncia</h3>
+    <form id="formFeedback" class="space-y-4" onsubmit="enviarFeedback(event)">
+      <p id="modalDescricao" class="text-sm"></p>
+      <textarea name="feedback" id="modalFeedback" placeholder="Escreva um feedback..." class="w-full p-2 rounded-xl border border-azul-escuro/30 focus:outline-none focus:ring-2 focus:ring-vermelho" required></textarea>
+      <div class="flex justify-end space-x-2">
+        <button type="button" onclick="fecharModal()" class="px-4 py-2 rounded-xl bg-white text-preto border border-azul-escuro/20">Cancelar</button>
+        <button type="submit" id="btnEnviarFeedback" class="px-4 py-2 rounded-xl bg-vermelho text-branco font-semibold">Enviar</button>
+        <button type="button" id="botaoAttFeedback" onclick="atualizarFeedBack()" class="hidden px-4 py-2 rounded-xl bg-azul-escuro text-branco font-semibold">Atualizar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- O script JS permanece igual -->
+</body>
+</html>
+<script>
+  // Verificar autenticação de admin
+  function verificarAutenticacaoAdmin() {
+    const token = localStorage.getItem('token');
+    const nivel = localStorage.getItem('nivel');
+
+    if (!token || nivel !== '1') {
+      alert("Acesso negado. Apenas administradores podem acessar esta área.");
+      localStorage.clear();
+      window.location.href = 'index.html';
+      return false;
+    }
+    return true;
+  }
+
+  // Função para pegar o token do localStorage
+  function getToken() {
+    return localStorage.getItem('token');
+  }
+
+  // Event listeners para tabs
+  const tabs = document.querySelectorAll(".tab-btn");
+  const contents = document.querySelectorAll(".tab-content");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(btn => btn.classList.remove("bg-[#A6B91A]", "text-black"));
+      contents.forEach(content => content.classList.add("hidden"));
+
+      tab.classList.add("bg-[#A6B91A]", "text-black");
+      document.getElementById(tab.dataset.tab).classList.remove("hidden");
+    });
+  });
+
+  // Logout
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    if (confirm('Deseja realmente sair?')) {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+  });
+
+  // Variáveis para modal
+  const listaDenuncias = document.getElementById("listaDenuncias");
+  const modal = document.getElementById("modal");
+  const modalDescricao = document.getElementById("modalDescricao");
+  const modalFeedback = document.getElementById("modalFeedback");
+  const btnEnviarFeedback = document.getElementById("btnEnviarFeedback");
+  let denunciaSelecionada = null;
+  let feedbackSelecionado = null;
+
+  // Carregar denúncias
+  async function carregarDenuncias() {
+    try {
+      const token = getToken();
+      const response = await fetch("http://localhost:8080/apis/admin/denuncia", {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          throw new Error("Acesso não autorizado");
+        }
+        throw new Error("Erro ao carregar denúncias");
+      }
+
+      const denuncias = await response.json();
+      renderizarDenuncias(denuncias);
+    } catch (error) {
+      console.error("Erro ao carregar denúncias:", error);
+      listaDenuncias.innerHTML = `<p class='text-white/60'>Erro ao carregar denúncias: ${error.message}</p>`;
+    }
+  }
+
+  function renderizarDenuncias(denuncias) {
+    listaDenuncias.innerHTML = "";
+
+    if (!denuncias.length) {
+      listaDenuncias.innerHTML = "<p class='text-white/60'>Nenhuma denúncia encontrada.</p>";
+      return;
+    }
+
+    denuncias.forEach(denuncia => {
+      const card = document.createElement("div");
+      card.className = "bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 space-y-3 cursor-pointer hover:bg-white/20 transition shadow";
+
+      card.innerHTML = `
+        <div class="space-y-2 text-white">
+          <div>
+            <h3 class="text-xl font-semibold text-white/90">${denuncia.titulo}</h3>
+            <p class="text-sm text-white/60">${new Date(denuncia.data).toLocaleDateString('pt-BR')}</p>
+          </div>
+
+          <p><span class="font-semibold">Texto:</span> ${denuncia.texto}</p>
+          <p><span class="font-semibold">Urgência:</span> ${denuncia.urgencia}</p>
+
+          <div class="border-t border-white/20 pt-2">
+            <p class="text-white/70 font-semibold mb-1">Órgão</p>
+            <div class="pl-3 space-y-1 text-sm">
+              <p><span class="font-semibold">ID:</span> ${denuncia.orgao.id}</p>
+              <p><span class="font-semibold">Nome:</span> ${denuncia.orgao.nome}</p>
+            </div>
+          </div>
+
+          <div class="border-t border-white/20 pt-2">
+            <p class="text-white/70 font-semibold mb-1">Tipo (Setor)</p>
+            <div class="pl-3 space-y-1 text-sm">
+              <p><span class="font-semibold">ID:</span> ${denuncia.tipo.id}</p>
+              <p><span class="font-semibold">Nome:</span> ${denuncia.tipo.nome}</p>
+            </div>
+          </div>
+
+          <div class="border-t border-white/20 pt-2">
+            <p class="text-white/70 font-semibold mb-1">Usuário</p>
+            <div class="pl-3 space-y-1 text-sm">
+              <p><span class="font-semibold">ID:</span> ${denuncia.usuario.id}</p>
+              <p><span class="font-semibold">CPF:</span> ${denuncia.usuario.cpf}</p>
+              <p><span class="font-semibold">Email:</span> ${denuncia.usuario.email}</p>
+              <p><span class="font-semibold">Nível:</span> ${denuncia.usuario.nivel}</p>
+            </div>
+          </div>
+
+          ${denuncia.feedback ? `
+          <div class="border-t border-white/20 pt-2">
+            <p class="text-white/70 font-semibold mb-1">Feedback Atual</p>
+            <div class="pl-3 bg-white/5 p-2 rounded text-sm">
+              <p>${denuncia.feedback.texto}</p>
+            </div>
+          </div>
+          ` : ''}
+
+          <div class="flex justify-end gap-2 pt-4 border-t border-white/20">
+            <button onclick="excluirDenuncia(${denuncia.id})" class="bg-red-600 text-white font-semibold px-4 py-1 rounded-xl hover:bg-red-700">Excluir</button>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener("click", () => abrirModal(denuncia));
+      listaDenuncias.appendChild(card);
+    });
+  }
+
+  async function excluirDenuncia(id) {
+    const confirmacao = confirm("Tem certeza que deseja excluir esta denúncia?");
+    if (!confirmacao) return;
+
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para excluir.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8080/apis/admin/denuncia/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) throw new Error("Erro ao excluir denúncia");
+
+      alert("Denúncia excluída com sucesso!");
+      carregarDenuncias();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao excluir denúncia.");
+    }
+  }
+
+  function abrirModal(denuncia) {
+    denunciaSelecionada = denuncia.id;
+    modalDescricao.textContent = `${denuncia.titulo} - ${denuncia.texto}`;
+
+    const botaoAttFeedback = document.getElementById("botaoAttFeedback");
+    const botaoEnviarFeedback = document.getElementById("btnEnviarFeedback");
+
+    if (denuncia.feedback) {
+      modalFeedback.value = denuncia.feedback.texto;
+      feedbackSelecionado = denuncia.feedback.id;
+      botaoAttFeedback.classList.remove("hidden");
+      botaoEnviarFeedback.classList.add("hidden");
+    } else {
+      modalFeedback.value = "";
+      feedbackSelecionado = null;
+      botaoAttFeedback.classList.add("hidden");
+      botaoEnviarFeedback.classList.remove("hidden");
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+
+  function fecharModal() {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  function atualizarFeedBack() {
+    const feedbackTexto = document.getElementById('modalFeedback').value.trim();
+
+    if (!feedbackTexto) {
+      alert('O feedback não pode estar vazio.');
+      return;
+    }
+
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para atualizar.");
+      return;
+    }
+
+    fetch(`http://localhost:8080/apis/admin/denuncia/admin/add-feedback/${denunciaSelecionada}/${encodeURIComponent(feedbackTexto)}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+            .then(response => {
+              if (response.ok) {
+                alert('Feedback atualizado com sucesso!');
+                fecharModal();
+                carregarDenuncias();
+              } else {
+                throw new Error('Erro ao atualizar feedback');
+              }
+            })
+            .catch(error => {
+              console.error('Erro:', error);
+              alert('Erro ao atualizar feedback.');
+            });
+  }
+
+  async function enviarFeedback(event) {
+    event.preventDefault();
+
+    const feedbackTexto = document.getElementById('modalFeedback').value.trim();
+
+    if (!feedbackTexto) {
+      alert('O feedback não pode estar vazio.');
+      return;
+    }
+
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para adicionar.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8080/apis/admin/denuncia/admin/add-feedback/${denunciaSelecionada}/${encodeURIComponent(feedbackTexto)}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        alert('Feedback enviado com sucesso!');
+        fecharModal();
+        carregarDenuncias();
+      } else {
+        const errorText = await response.text();
+        alert('Erro ao enviar feedback: ' + errorText);
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro na conexão com o servidor.');
+    }
+  }
+
+  // Gerenciamento de Tipos de Problema
+  const formProblema = document.querySelector('#problemas form');
+  const inputProblema = formProblema.querySelector('input');
+  const listaProblemas = document.querySelector('#problemas ul');
+  const API_URL = "http://localhost:8080/apis/admin/tipo";
+
+  async function carregarTiposProblema() {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error("Erro ao carregar tipos de problema");
+
+      const tipos = await response.json();
+      renderizarTiposProblema(tipos);
+    } catch (err) {
+      console.error(err);
+      listaProblemas.innerHTML = `<p class="text-white/60">Erro ao carregar tipos de problema.</p>`;
+    }
+  }
+
+  function renderizarTiposProblema(tipos) {
+    listaProblemas.innerHTML = '';
+    tipos.forEach(tipo => {
+      const li = document.createElement('li');
+      li.className = 'flex justify-between items-center bg-white/10 p-2 rounded-xl border border-white/20';
+
+      const input = document.createElement('input');
+      input.value = tipo.nome;
+      input.className = "bg-transparent text-white border border-white/20 rounded px-2 py-1 w-full mr-2";
+
+      const salvarBtn = document.createElement('button');
+      salvarBtn.textContent = "Atualizar";
+      salvarBtn.className = "text-green-400 hover:text-green-500 mr-2";
+      salvarBtn.addEventListener('click', () => atualizarTipoProblema(tipo.id, input.value));
+
+      const removerBtn = document.createElement('button');
+      removerBtn.textContent = "Remover";
+      removerBtn.className = "text-red-500 hover:text-red-600";
+      removerBtn.addEventListener('click', () => removerTipoProblema(tipo.id));
+
+      li.appendChild(input);
+      li.appendChild(salvarBtn);
+      li.appendChild(removerBtn);
+      listaProblemas.appendChild(li);
+    });
+  }
+
+  async function atualizarTipoProblema(id, novoNome) {
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para editar.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: id, nome: novoNome })
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar tipo de problema");
+
+      carregarTiposProblema();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao atualizar tipo de problema");
+    }
+  }
+
+  formProblema.addEventListener('submit', async e => {
+    e.preventDefault();
+    const nomeTipo = inputProblema.value.trim();
+    if (!nomeTipo) return;
+
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para adicionar.");
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ nome: nomeTipo })
+      });
+
+      if (!response.ok) throw new Error("Erro ao adicionar tipo de problema");
+
+      inputProblema.value = '';
+      carregarTiposProblema();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao adicionar tipo de problema");
+    }
+  });
+
+  async function removerTipoProblema(id) {
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para remover.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) throw new Error("Erro ao remover tipo de problema");
+
+      carregarTiposProblema();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao remover tipo de problema");
+    }
+  }
+
+  // Gerenciamento de Órgãos
+  const formOrgao = document.querySelector('#orgaos form');
+  const inputOrgao = formOrgao.querySelector('input');
+  const listaOrgaos = document.querySelector('#orgaos ul');
+  const API_ORGAOS_URL = "http://localhost:8080/apis/admin/orgaos";
+
+  async function carregarOrgaos() {
+    try {
+      const response = await fetch(API_ORGAOS_URL);
+      if (!response.ok) throw new Error("Erro ao carregar órgãos");
+
+      const orgaos = await response.json();
+      renderizarOrgaos(orgaos);
+    } catch (err) {
+      console.error(err);
+      listaOrgaos.innerHTML = `<p class="text-white/60">Erro ao carregar órgãos.</p>`;
+    }
+  }
+
+  function renderizarOrgaos(orgaos) {
+    listaOrgaos.innerHTML = '';
+    orgaos.forEach(orgao => {
+      const li = document.createElement('li');
+      li.className = 'flex justify-between items-center bg-white/10 p-2 rounded-xl border border-white/20';
+
+      const input = document.createElement('input');
+      input.value = orgao.nome;
+      input.className = "bg-transparent text-white border border-white/20 rounded px-2 py-1 w-full mr-2";
+
+      const salvarBtn = document.createElement('button');
+      salvarBtn.textContent = "Atualizar";
+      salvarBtn.className = "text-green-400 hover:text-green-500 mr-2";
+      salvarBtn.addEventListener('click', () => atualizarOrgao(orgao.id, input.value));
+
+      const removerBtn = document.createElement('button');
+      removerBtn.textContent = "Remover";
+      removerBtn.className = "text-red-500 hover:text-red-600";
+      removerBtn.addEventListener('click', () => removerOrgao(orgao.id));
+
+      li.appendChild(input);
+      li.appendChild(salvarBtn);
+      li.appendChild(removerBtn);
+      listaOrgaos.appendChild(li);
+    });
+  }
+
+  async function atualizarOrgao(id, novoNome) {
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para editar.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_ORGAOS_URL}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: id, nome: novoNome })
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar órgão");
+
+      carregarOrgaos();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao atualizar órgão");
+    }
+  }
+
+  formOrgao.addEventListener('submit', async e => {
+    e.preventDefault();
+    const nomeOrgao = inputOrgao.value.trim();
+    if (!nomeOrgao) return;
+
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para adicionar.");
+      return;
+    }
+
+    try {
+      const response = await fetch(API_ORGAOS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ nome: nomeOrgao })
+      });
+
+      if (!response.ok) throw new Error("Erro ao adicionar órgão");
+
+      inputOrgao.value = '';
+      carregarOrgaos();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao adicionar órgão");
+    }
+  });
+
+  async function removerOrgao(id) {
+    const token = getToken();
+    if (!token) {
+      alert("Você precisa estar autenticado para remover.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_ORGAOS_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) throw new Error("Erro ao remover órgão");
+
+      carregarOrgaos();
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao remover órgão");
+    }
+  }
+
+  // Inicialização
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!verificarAutenticacaoAdmin()) {
+      return;
+    }
+
+    carregarDenuncias();
+    carregarTiposProblema();
+    carregarOrgaos();
+  });
+
+</script>
+</body>
+</html>

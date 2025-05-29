@@ -1,4 +1,3 @@
-
 :root {
     --indigo-dye: #08415C;
     --persian-red: #CC2936;
@@ -22,13 +21,14 @@ body {
 }
 
 .container {
-    display: contents;
+    display: flex; /* Corrigido: era 'contents' */
     width: 80%;
     max-width: 900px;
     height: 500px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     overflow: hidden;
+    background-color: white; /* Adicionado para garantir fundo branco */
 }
 
 .left-panel {
@@ -59,6 +59,7 @@ body {
     font-weight: 700;
     margin-bottom: 30px;
     z-index: 1;
+    text-align: center;
 }
 
 .tagline {
@@ -66,6 +67,7 @@ body {
     margin-bottom: 20px;
     font-size: 18px;
     z-index: 1;
+    line-height: 1.4;
 }
 
 .right-panel {
@@ -79,6 +81,7 @@ body {
 
 .login-header {
     margin-bottom: 40px;
+    text-align: center;
 }
 
 .login-header h2 {
@@ -93,18 +96,17 @@ body {
 
 .form-group {
     margin-bottom: 25px;
-/*     position: relative;*/
 }
 
 .form-group label {
     display: block;
-    /* position: absolute; */
     margin-bottom: 8px;
     color: var(--indigo-dye);
     font-weight: 500;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 12px 15px;
     border: 2px solid var(--platinum);
@@ -113,7 +115,8 @@ body {
     transition: all 0.3s ease;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
     border-color: var(--slate-gray);
     outline: none;
 }
@@ -145,6 +148,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 20px;
 }
 
 .login-button:hover {
@@ -152,7 +156,6 @@ body {
 }
 
 .sign-up {
-    margin-top: 30px;
     text-align: center;
     color: var(--slate-gray);
     font-size: 14px;
@@ -164,27 +167,63 @@ body {
     font-weight: 600;
 }
 
+.sign-up a:hover {
+    text-decoration: underline;
+}
+
+/* Classes para validação */
+.erro-input {
+    border-color: var(--persian-red) !important;
+}
+
+.erroValida {
+    color: var(--persian-red);
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
         height: auto;
-        width: 90%;
+        width: 95%;
+        max-width: none;
     }
 
     .left-panel {
         padding: 30px 20px;
+        min-height: 200px;
     }
 
     .right-panel {
         padding: 30px 20px;
     }
+
+    .brand {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .tagline {
+        font-size: 16px;
+    }
+
+    .login-header h2 {
+        font-size: 24px;
+    }
 }
 
-.erro-input {
-    border-color: red !important;   
-}
+@media (max-width: 480px) {
+    .container {
+        width: 100%;
+        margin: 20px;
+        border-radius: 8px;
+    }
 
-.erroValida{
-    color: red;
+    .left-panel,
+    .right-panel {
+        padding: 20px 15px;
+    }
 }
