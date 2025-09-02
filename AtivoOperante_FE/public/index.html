@@ -1,202 +1,373 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ativo Operante</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            azul: { escuro: '#0A2342' },
-            bege: '#F5E9DA',
-            vermelho: '#D7263D',
-            preto: '#181818',
-            branco: '#FFFFFF'
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ativo Operante - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      }
-    }
-  </script>
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            min-height: 500px;
+            display: flex;
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .left-panel h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .left-panel p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .switch-form a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 400px;
+            }
+
+            .left-panel {
+                padding: 20px;
+                min-height: 200px;
+            }
+
+            .left-panel h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
 </head>
-<body class="bg-azul-escuro min-h-screen flex items-center justify-center px-4 py-8">
+<body>
+<div class="container">
+    <div class="left-panel">
+        <h1>Ativo Operante</h1>
+        <p>Sistema de denúncias cidadãs para uma cidade mais participativa e transparente.</p>
+    </div>
 
-<div class="w-full max-w-md p-8 rounded-2xl bg-bege border border-preto/20 shadow-xl transition-all duration-500 ease-in-out">
-  <h2 class="text-3xl font-bold text-preto mb-6 text-center">
-    Ativo <span class="text-vermelho">Operante</span>
-  </h2>
+    <div class="right-panel">
+        <!-- Formulário de Login -->
+        <div id="loginForm" class="form-container active">
+            <h2>Entrar</h2>
+            <div id="loginError" class="error-message"></div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+            <div class="switch-form">
+                <p>Não tem conta? <a href="#" onclick="showRegister()">Cadastre-se</a></p>
+            </div>
+        </div>
 
-  <!-- Login Form -->
-  <form id="loginForm" class="space-y-4">
-    <input type="email" id="email" name="email" placeholder="Email" required
-           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
-    <input type="number" id="senha" name="senha" placeholder="Senha (apenas números)" required
-           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
-    <button type="submit"
-            class="w-full py-2 px-4 rounded-xl text-branco font-semibold bg-azul-escuro hover:bg-preto transition">
-      Entrar
-    </button>
-  </form>
-
-  <p class="mt-6 text-sm text-preto text-center">
-    Não tem login?
-    <button id="showCadastro" class="text-vermelho hover:underline focus:outline-none transition">
-      Cadastre-se aqui
-    </button>
-  </p>
-
-  <!-- Cadastro Form (inicialmente oculto) -->
-  <form id="cadastroForm" class="space-y-4 mt-8 hidden">
-    <input type="email" id="cadastroEmail" placeholder="Email" required
-           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
-    <input type="number" id="cadastroSenha" placeholder="Senha (apenas números)" required
-           class="w-full px-4 py-2 bg-branco text-preto placeholder-preto/60 border border-azul-escuro/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-vermelho" />
-    <button type="submit"
-            class="w-full py-2 px-4 rounded-xl text-branco font-semibold bg-vermelho hover:bg-azul-escuro transition">
-      Criar Conta
-    </button>
-    <p class="text-sm text-preto text-center">
-      Já tem conta?
-      <button id="voltarLogin" class="text-vermelho hover:underline focus:outline-none transition">
-        Voltar ao login
-      </button>
-    </p>
-  </form>
+        <!-- Formulário de Cadastro -->
+        <div id="registerForm" class="form-container">
+            <h2>Cadastrar</h2>
+            <div id="registerError" class="error-message"></div>
+            <div id="registerSuccess" class="success-message"></div>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerCpf">CPF:</label>
+                    <input type="text" id="registerCpf" required maxlength="14" placeholder="000.000.000-00">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">E-mail:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha:</label>
+                    <input type="password" id="registerPassword" required minlength="6">
+                </div>
+                <button type="submit" class="btn">Cadastrar</button>
+            </form>
+            <div class="switch-form">
+                <p>Já tem conta? <a href="#" onclick="showLogin()">Entrar</a></p>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
+
 <script>
-  const loginForm = document.getElementById("loginForm");
-  const cadastroForm = document.getElementById("cadastroForm");
-  const showCadastro = document.getElementById("showCadastro");
-  const voltarLogin = document.getElementById("voltarLogin");
+    const API_BASE = 'http://localhost:8080';
 
-  // Verificar se já está logado
-  window.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    const nivel = localStorage.getItem('nivel');
-
-    if (token && nivel) {
-      // Redirecionar baseado no nível
-      if (nivel === '1') {
-        window.location.href = 'adm.html';
-      } else if (nivel === '2') {
-        window.location.href = 'home.html';
-      }
-    }
-  });
-
-  showCadastro.addEventListener("click", () => {
-    loginForm.classList.add("hidden");
-    cadastroForm.classList.remove("hidden");
-  });
-
-  voltarLogin.addEventListener("click", () => {
-    cadastroForm.classList.add("hidden");
-    loginForm.classList.remove("hidden");
-  });
-
-  // Login
-  loginForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const email = document.getElementById("email").value;
-    const senha = parseInt(document.getElementById("senha").value);
-
-    if (isNaN(senha)) {
-      alert("A senha deve ser um número válido");
-      return;
+    // Alternar entre formulários
+    function showLogin() {
+        document.getElementById('loginForm').classList.add('active');
+        document.getElementById('registerForm').classList.remove('active');
+        clearMessages();
     }
 
-    const data = {
-      email: email,
-      senha: senha
+    function showRegister() {
+        document.getElementById('registerForm').classList.add('active');
+        document.getElementById('loginForm').classList.remove('active');
+        clearMessages();
+    }
+
+    function clearMessages() {
+        document.getElementById('loginError').style.display = 'none';
+        document.getElementById('registerError').style.display = 'none';
+        document.getElementById('registerSuccess').style.display = 'none';
+    }
+
+    // Formatação de CPF
+    document.getElementById('registerCpf').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        e.target.value = value;
+    });
+
+    // Handle Login
+    async function handleLogin(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const response = await fetch(`${API_BASE}/acesso/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    senha: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Salvar dados do usuário
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userId', data.id);
+                localStorage.setItem('userEmail', data.email);
+                localStorage.setItem('userLevel', data.nivel);
+
+                // Redirecionar baseado no nível
+                if (data.nivel === 1) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'usuario.html';
+                }
+            } else {
+                showError('loginError', data.mensagem || 'Erro no login');
+            }
+        } catch (error) {
+            showError('loginError', 'Erro de conexão com o servidor');
+        }
+    }
+
+    // Handle Register
+    async function handleRegister(event) {
+        event.preventDefault();
+
+        const cpf = document.getElementById('registerCpf').value.replace(/\D/g, '');
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        if (cpf.length !== 11) {
+            showError('registerError', 'CPF deve ter 11 dígitos');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/apis/usuario/cadastro`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    cpf: cpf,
+                    email: email,
+                    senha: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showSuccess('registerSuccess', 'Cadastro realizado com sucesso! Faça login para continuar.');
+                document.getElementById('registerForm').querySelector('form').reset();
+                setTimeout(() => {
+                    showLogin();
+                }, 2000);
+            } else {
+                showError('registerError', data.mensagem || 'Erro no cadastro');
+            }
+        } catch (error) {
+            showError('registerError', 'Erro de conexão com o servidor');
+        }
+    }
+
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.style.display = 'block';
+    }
+
+    function showSuccess(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.style.display = 'block';
+    }
+
+    // Verificar se já está logado
+    window.onload = function() {
+        const token = localStorage.getItem('token');
+        const userLevel = localStorage.getItem('userLevel');
+
+        if (token && userLevel) {
+            if (userLevel === '1') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'usuario.html';
+            }
+        }
     };
-
-    try {
-      const response = await fetch("http://localhost:8080/api/public/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.mensagem || "Falha na autenticação");
-      }
-
-      const responseData = await response.json();
-
-      // Armazenar token e nível
-      localStorage.setItem("token", responseData.token);
-      localStorage.setItem("nivel", responseData.nivel.toString());
-
-      // Redirecionar baseado no nível
-      if (responseData.nivel === 1) {
-        window.location.href = "adm.html";
-      } else if (responseData.nivel === 2) {
-        window.location.href = "home.html";
-      } else {
-        alert("Nível de usuário inválido");
-      }
-
-    } catch (err) {
-      console.error("Erro no login:", err);
-      alert("Erro ao fazer login: " + err.message);
-    }
-  });
-
-  // Cadastro
-  cadastroForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const email = document.getElementById("cadastroEmail").value;
-    const senha = parseInt(document.getElementById("cadastroSenha").value);
-
-    if (isNaN(senha)) {
-      alert("A senha deve ser um número válido");
-      return;
-    }
-
-    const data = {
-      email: email,
-      senha: senha
-    };
-
-    try {
-      const response = await fetch("http://localhost:8080/api/public/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText);
-      }
-
-      const message = await response.text();
-      alert("Usuário cadastrado com sucesso!");
-
-      // Voltar para o login
-      cadastroForm.classList.add("hidden");
-      loginForm.classList.remove("hidden");
-
-      // Limpar campos
-      document.getElementById("cadastroEmail").value = "";
-      document.getElementById("cadastroSenha").value = "";
-
-    } catch (err) {
-      console.error("Erro no cadastro:", err);
-      alert("Erro ao cadastrar: " + err.message);
-    }
-  });
 </script>
 </body>
 </html>
