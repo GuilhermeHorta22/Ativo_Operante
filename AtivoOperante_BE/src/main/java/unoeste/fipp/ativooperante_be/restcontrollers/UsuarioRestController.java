@@ -45,6 +45,7 @@ public class UsuarioRestController {
 
     @PostMapping("/cadastro")
     public ResponseEntity<Object> cadastrarCidadao(@RequestBody Usuario usuario) {
+        
         // Validações básicas
         if (usuario.getCpf() == null || usuario.getCpf().trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
